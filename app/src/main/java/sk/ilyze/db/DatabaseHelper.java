@@ -13,6 +13,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import sk.ilyze.model.Lift;
 import sk.ilyze.model.Region;
 import sk.ilyze.model.Resort;
 
@@ -24,6 +25,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // the DAO object we use to access the SimpleData table
     private Dao<Resort, Integer> resortDao = null;
     private Dao<Region, Integer> regionDao = null;
+    private Dao<Lift, Integer> liftDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,6 +36,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Region.class);
             TableUtils.createTable(connectionSource, Resort.class);
+            TableUtils.createTable(connectionSource, Lift.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
@@ -83,6 +86,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         return regionDao;
+    }
+
+    public Dao<Lift, Integer> getLiftDao() {
+        if (null == liftDao) {
+            try {
+                liftDao = getDao(Lift.class);
+            }catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return liftDao;
     }
 
 }

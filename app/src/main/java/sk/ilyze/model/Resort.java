@@ -5,6 +5,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @DatabaseTable
 public class Resort {
     @DatabaseField(generatedId = true)
@@ -15,6 +18,9 @@ public class Resort {
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Region region;
+
+    @ForeignCollectionField
+    private ForeignCollection<Lift> lifts;
 
     @DatabaseField
     private int length;
@@ -82,5 +88,19 @@ public class Resort {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Lift> getLifts() {
+        ArrayList<Lift> liftList = new ArrayList<Lift>();
+
+        for(Lift l : lifts){
+            liftList.add(l);
+        }
+
+        return liftList;
+    }
+
+    public void setLifts(ForeignCollection<Lift> lifts) {
+        this.lifts = lifts;
     }
 }

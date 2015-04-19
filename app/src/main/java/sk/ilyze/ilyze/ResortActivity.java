@@ -1,33 +1,31 @@
 package sk.ilyze.ilyze;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import sk.ilyze.db.DatabaseManager;
-import sk.ilyze.model.Region;
+import sk.ilyze.model.Lift;
 import sk.ilyze.model.Resort;
 
-public class RegionActivity extends ActionBarActivity {
-    private Region region;
-    ListView listView;
+
+public class ResortActivity extends ActionBarActivity {
+    private Resort resort;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_region, null);
+        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_resort, null);
         listView = (ListView) contentView.findViewById(R.id.list_view);
 
         setContentView(contentView);
@@ -36,38 +34,39 @@ public class RegionActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        int regionId = getIntent().getExtras().getInt(Constants.keyRegionId);
-        region = DatabaseManager.getInstance().getReionWithId(regionId);
+        int resortId = getIntent().getExtras().getInt(Constants.keyResortId);
+        resort= DatabaseManager.getInstance().getResortWithId(resortId);
         setupListView();
-        setTitle("Region: '"+region.getName()+"'");
+        setTitle("Region: '"+resort.getName()+"'");
     }
 
     private void setupListView() {
-        if (null != region) {
-            final List<Resort> resorts = region.getResorts();
+        if (null != resort) {
+            final List<Lift> lifts = resort.getLifts();
             List<String> titles = new ArrayList<String>();
-            for (Resort r : resorts) {
-                titles.add(r.getName());
+            for (Lift l: lifts) {
+                titles.add(l.getName());
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
             listView.setAdapter(adapter);
-            final Activity activity = this;
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Resort item = resorts.get(position);
-                    Intent intent = new Intent(activity,ResortActivity.class);
-                    intent.putExtra(Constants.keyResortId, item.getId());
-                    startActivity(intent);
-                }
-            });
+//            final Activity activity = this;
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Resort item = resorts.get(position);
+//                    Intent intent = new Intent(activity,ResortActivity.class);
+//                    intent.putExtra(Constants.keyResortId, item.getId());
+//                    startActivity(intent);
+//                }
+//            });
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_region, menu);
+        getMenuInflater().inflate(R.menu.menu_resort, menu);
         return true;
     }
 

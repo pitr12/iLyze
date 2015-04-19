@@ -5,6 +5,7 @@ import android.content.Context;
 import java.sql.SQLException;
 import java.util.List;
 
+import sk.ilyze.model.Lift;
 import sk.ilyze.model.Region;
 import sk.ilyze.model.Resort;
 
@@ -58,6 +59,16 @@ public class DatabaseManager {
         return region;
     }
 
+    public Resort getResortWithId(int resortId) {
+        Resort resort = null;
+        try {
+            resort = getHelper().getResortDao().queryForId(resortId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resort;
+    }
+
     public Resort newResort() {
         Resort resort = new Resort();
         try {
@@ -74,5 +85,31 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Lift newLift() {
+        Lift lift = new Lift();
+        try {
+            getHelper().getLiftDao().create(lift);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lift;
+    }
+
+    public void updateLift(Lift item) {
+        try {
+            getHelper().getLiftDao().update(item);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isDbEmpty() throws SQLException {
+        double count = getHelper().getRegionDao().countOf();
+        if(count == 0.0){
+            return true;
+        }
+        return false;
     }
 }

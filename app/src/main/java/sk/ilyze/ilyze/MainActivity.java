@@ -11,17 +11,69 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import sk.ilyze.db.DatabaseManager;
+import sk.ilyze.model.Lift;
 import sk.ilyze.model.Region;
 import sk.ilyze.model.Resort;
 
 
 public class MainActivity extends ActionBarActivity {
     ListView listView;
+
+    protected String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("init_data.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
+
+    protected void initDatabase() throws JSONException {
+        JSONArray data = new JSONArray(loadJSONFromAsset());
+
+        for(int i=0; i<data.length(); i++){
+            JSONObject region = data.getJSONObject(i);
+            String region_name = region.getString("region_name");
+
+            Region r = createRegion(region_name);
+
+            JSONArray resorts = region.getJSONArray("resorts");
+            for(int j=0; j<resorts.length(); j++){
+                JSONObject resort = resorts.getJSONObject(j);
+                String resort_name = resort.getString("name");
+                Resort rs = createResort(resort_name,r);
+
+                JSONArray lifts = resort.getJSONArray("lifts");
+                for(int k=0; k<lifts.length(); k++){
+                    JSONObject lift = lifts.getJSONObject(k);
+                    String lift_name = lift.getString("name");
+
+                    createLift(lift_name,rs);
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,24 +85,44 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(contentView);
 
-        createRegion();
+
+        try {
+            if(DatabaseManager.getInstance().isDbEmpty()) {
+                try {
+                    initDatabase();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    protected void createRegion(){
+    protected Region createRegion(String name){
         Region r = new Region();
-        r.setName("region2");
+        r.setName(name);
         DatabaseManager.getInstance().addRegion(r);
-
-        createResort("resort1");
+        return r;
     }
 
-    private void createResort(String name) {
-        Region region = DatabaseManager.getInstance().getAllRegions().get(0);
+    protected Resort createResort(String name, Region region) {
         if (null!=region) {
             Resort item = DatabaseManager.getInstance().newResort();
             item.setName(name);
             item.setRegion(region);
             DatabaseManager.getInstance().updateResort(item);
+            return item;
+        }
+        return  null;
+    }
+
+    protected void createLift(String name, Resort resort) {
+        if (null!=resort) {
+            Lift item = DatabaseManager.getInstance().newLift();
+            item.setName(name);
+            item.setResort(resort);
+            DatabaseManager.getInstance().updateLift(item);
         }
     }
 

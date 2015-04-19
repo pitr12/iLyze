@@ -1,0 +1,58 @@
+[
+	{
+	"region_name": "region 10",
+	"resorts": [
+		{
+			"name": "resort 1",
+			"lifts":[
+			    {
+			    "name": "lift1"
+			    }
+			]
+		},
+		{
+			"name": "resort 2",
+			"lifts":[
+			    {
+           	    "name": "lift1"
+           	    }
+        	]
+		},
+		{
+			"name": "resort 3",
+			"lifts":[
+			    {
+			    "name": "lift1"
+			    }
+         	]
+		}]
+	},
+	{
+	"region_name": "region 11",
+	"resorts": [
+    		{
+    			"name": "resort 4",
+    			"lifts":[
+    			    {
+    			    "name": "lift2"
+    			    }
+    			]
+    		},
+    		{
+    			"name": "resort 5",
+    			"lifts":[
+               	    {
+                        "name": "lift2"
+                    }
+            	]
+    		},
+    		{
+    			"name": "resort 6",
+    			"lifts":[
+    			    {
+    			    "name": "lift2"
+    			    }
+             	]
+    		}]
+    	}
+]

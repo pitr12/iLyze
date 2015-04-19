@@ -17,8 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="Region list"
-            android:name=".RegionActivity" />
+            android:name=".RegionActivity"
+            android:label="@string/title_activity_region" />
+        <activity
+            android:name=".ResortActivity"
+            android:label="@string/title_activity_resort" >
+        </activity>
     </application>
 
 </manifest>
