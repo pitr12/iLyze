@@ -1,23 +1,48 @@
 package sk.ilyze.ilyze;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import sk.ilyze.model.Weather;
 
 public class WeatherClient {
 
     private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
 
-    public String getWeatherData(String location) {
+    public static boolean CheckInternet(Context ctx) {
+        ConnectivityManager connec = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        return wifi.isConnected() || mobile.isConnected();
+    }
+
+    public String getWeatherData(String location, String latitude, String longitude) throws MalformedURLException {
         HttpURLConnection con = null ;
         InputStream is = null;
+        URL url;
+
+        double lat = Double.parseDouble(latitude);
+        double lon = Double.parseDouble(longitude);
+
+        if(lat != 0.0 && lon != 0.0){
+            url = new URL("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon);
+        }
+        else {
+            url = new URL(BASE_URL + location);
+        }
 
         try {
-            con = (HttpURLConnection) ( new URL(BASE_URL + location)).openConnection();
+            con = (HttpURLConnection) (url).openConnection();
 
 
             con.setRequestMethod("GET");

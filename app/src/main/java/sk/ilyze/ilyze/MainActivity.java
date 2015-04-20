@@ -1,36 +1,27 @@
 package sk.ilyze.ilyze;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TwoLineListItem;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import sk.ilyze.db.DatabaseManager;
@@ -41,9 +32,14 @@ import sk.ilyze.model.Weather;
 
 
 public class MainActivity extends ActionBarActivity{
-    ListView listView;
-    TextView txtLat;
-    protected LocationManager locationManager;
+    protected ListView listView;
+    protected TextView weather;
+    protected TextView location;
+    protected GPSTracker gps;
+    protected double latitude;
+    protected double longitude;
+    protected String city;
+
 
 
     protected String loadJSONFromAsset() {
@@ -113,11 +109,30 @@ public class MainActivity extends ActionBarActivity{
         }
 
 
-        txtLat = (TextView) contentView.findViewById(R.id.textview1);
+        //location
+        gps = new GPSTracker(this);
+        location = (TextView) contentView.findViewById(R.id.loc);
+        if(gps.canGetLocation()){
+           latitude = gps.getLatitude();
+           longitude = gps.getLongitude();
 
-        String city = "Bratislava,sk";
-        JSONWeatherTask task = new JSONWeatherTask();
-        task.execute(new String[]{city});
+            location.setText("Lat: " +latitude + "\n Long: " +longitude);
+        }else{
+            gps.showSettingsAlert();
+        }
+
+        //weather
+        if(WeatherClient.CheckInternet(this)) {
+            weather = (TextView) contentView.findViewById(R.id.textview1);
+
+            String city = "Bratislava,sk";
+            String lat = latitude + "";
+            String lon = longitude + "";
+
+            JSONWeatherTask task = new JSONWeatherTask();
+            task.execute(new String[]{city,lat,lon});
+        }
+
     }
 
     protected Region createRegion(String name){
@@ -198,7 +213,12 @@ public class MainActivity extends ActionBarActivity{
         @Override
         protected Weather doInBackground(String... params) {
             Weather weather = new Weather();
-            String data = ( (new WeatherClient()).getWeatherData(params[0]));
+            String data = null;
+            try {
+                data = ( (new WeatherClient()).getWeatherData(params[0],params[1],params[2]));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
 
             try {
                 weather = JSONWeatherParser.getWeather(data);
@@ -227,7 +247,7 @@ public class MainActivity extends ActionBarActivity{
 
             //cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
             //condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-            txtLat.setText(weather.location.getCity() + " - " + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+            MainActivity.this.weather.setText(weather.location.getCity() + ": " + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
 //            hum.setText("" + weather.currentCondition.getHumidity() + "%");
 //            press.setText("" + weather.currentCondition.getPressure() + " hPa");
 //            windSpeed.setText("" + weather.wind.getSpeed() + " mps");
