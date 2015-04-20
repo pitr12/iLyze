@@ -39,7 +39,7 @@ public class RegionActivity extends ActionBarActivity {
         int regionId = getIntent().getExtras().getInt(Constants.keyRegionId);
         region = DatabaseManager.getInstance().getReionWithId(regionId);
         setupListView();
-        setTitle("Region: '"+region.getName()+"'");
+        setTitle(Constants.appName + " " +region.getName());
     }
 
     private void setupListView() {

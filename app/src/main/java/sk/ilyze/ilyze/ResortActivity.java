@@ -37,7 +37,7 @@ public class ResortActivity extends ActionBarActivity {
         int resortId = getIntent().getExtras().getInt(Constants.keyResortId);
         resort= DatabaseManager.getInstance().getResortWithId(resortId);
         setupListView();
-        setTitle("Region: '"+resort.getName()+"'");
+        setTitle(Constants.appName + " " +resort.getName()+" - lanovky");
     }
 
     private void setupListView() {

@@ -84,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
         listView = (ListView) contentView.findViewById(R.id.list_view);
 
         setContentView(contentView);
-
+        setTitle(Constants.appName + " Všetky regióny");
 
         try {
             if(DatabaseManager.getInstance().isDbEmpty()) {

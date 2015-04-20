@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world 1!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main">ResortActivity</string>
     <string name="title_activity_resort">ResortActivity</string>
     <string name="title_activity_region">RegionActivity</string>
 </resources>
