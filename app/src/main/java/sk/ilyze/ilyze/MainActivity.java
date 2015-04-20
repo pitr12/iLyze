@@ -1,9 +1,13 @@
 package sk.ilyze.ilyze;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,14 +15,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TwoLineListItem;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +38,10 @@ import sk.ilyze.model.Region;
 import sk.ilyze.model.Resort;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
     ListView listView;
+    protected LocationManager locationManager;
+
 
     protected String loadJSONFromAsset() {
         String json = null;
@@ -97,6 +108,15 @@ public class MainActivity extends ActionBarActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //MyLocation loc = new MyLocation(this);
+
+        //Weather
+        WeatherClient weather = new WeatherClient();
+        String weather_response = weather.getWeatherData("Bratislava");
+
+        TextView txtLat = (TextView) contentView.findViewById(R.id.textview1);
+        txtLat.setText(weather_response);
     }
 
     protected Region createRegion(String name){
@@ -135,12 +155,7 @@ public class MainActivity extends ActionBarActivity {
     private void setupListView(ListView lv) {
         final List<Region> regions = DatabaseManager.getInstance().getAllRegions();
 
-        List<String> titles = new ArrayList<String>();
-        for (Region r : regions) {
-            titles.add(r.getName());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
+        RegionAdapter adapter = new RegionAdapter(this, regions);
         lv.setAdapter(adapter);
 
         final Activity activity = this;
