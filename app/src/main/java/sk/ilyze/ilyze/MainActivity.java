@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,10 +37,12 @@ import sk.ilyze.db.DatabaseManager;
 import sk.ilyze.model.Lift;
 import sk.ilyze.model.Region;
 import sk.ilyze.model.Resort;
+import sk.ilyze.model.Weather;
 
 
 public class MainActivity extends ActionBarActivity{
     ListView listView;
+    TextView txtLat;
     protected LocationManager locationManager;
 
 
@@ -109,14 +112,12 @@ public class MainActivity extends ActionBarActivity{
             e.printStackTrace();
         }
 
-        //MyLocation loc = new MyLocation(this);
 
-        //Weather
-        WeatherClient weather = new WeatherClient();
-        String weather_response = weather.getWeatherData("Bratislava");
+        txtLat = (TextView) contentView.findViewById(R.id.textview1);
 
-        TextView txtLat = (TextView) contentView.findViewById(R.id.textview1);
-        txtLat.setText(weather_response);
+        String city = "Bratislava,sk";
+        JSONWeatherTask task = new JSONWeatherTask();
+        task.execute(new String[]{city});
     }
 
     protected Region createRegion(String name){
@@ -190,5 +191,48 @@ public class MainActivity extends ActionBarActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+
+        @Override
+        protected Weather doInBackground(String... params) {
+            Weather weather = new Weather();
+            String data = ( (new WeatherClient()).getWeatherData(params[0]));
+
+            try {
+                weather = JSONWeatherParser.getWeather(data);
+
+                // Let's retrieve the icon
+                weather.iconData = ( (new WeatherClient()).getImage(weather.currentCondition.getIcon()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return weather;
+
+        }
+
+
+
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+//            if (weather.iconData != null && weather.iconData.length > 0) {
+//                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+//                imgView.setImageBitmap(img);
+//            }
+
+            //cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+            //condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+            txtLat.setText(weather.location.getCity() + " - " + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+//            hum.setText("" + weather.currentCondition.getHumidity() + "%");
+//            press.setText("" + weather.currentCondition.getPressure() + " hPa");
+//            windSpeed.setText("" + weather.wind.getSpeed() + " mps");
+//            windDeg.setText("" + weather.wind.getDeg() + "�");
+
+        }
     }
 }
