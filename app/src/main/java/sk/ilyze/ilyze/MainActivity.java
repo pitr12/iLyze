@@ -2,6 +2,10 @@ package sk.ilyze.ilyze;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +40,7 @@ public class MainActivity extends ActionBarActivity{
     protected ListView listView;
     protected TextView weather;
     protected TextView location;
+    protected ImageView weatherIcon;
     protected GPSTracker gps;
     protected double latitude;
     protected double longitude;
@@ -124,6 +130,7 @@ public class MainActivity extends ActionBarActivity{
         //weather
         if(WeatherClient.CheckInternet(this)) {
             weather = (TextView) contentView.findViewById(R.id.textview1);
+            weatherIcon = (ImageView) contentView.findViewById(R.id.condIcon);
 
             String city = "Bratislava,sk";
             String lat = latitude + "";
@@ -240,10 +247,30 @@ public class MainActivity extends ActionBarActivity{
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
 
-//            if (weather.iconData != null && weather.iconData.length > 0) {
-//                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
-//                imgView.setImageBitmap(img);
-//            }
+            if (weather.iconData != null && weather.iconData.length > 0) {
+                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+
+                String icon = weather.currentCondition.getIcon() + ".png";
+
+
+
+
+                // load image
+                try {
+                    AssetManager assetManager = getAssets();
+                    // get input stream
+                    InputStream ims = assetManager.open("weather/"+icon);
+                    // load image as Drawable
+                    Drawable d = Drawable.createFromStream(ims, null);
+                    // set image to ImageView
+                    if(d != null) {
+                        weatherIcon.setImageDrawable(d);
+                    }
+                }
+                catch(IOException ex) {
+                    return;
+                }
+            }
 
             //cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
             //condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
