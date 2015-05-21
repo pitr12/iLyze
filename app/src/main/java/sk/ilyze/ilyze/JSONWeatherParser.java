@@ -1,17 +1,5 @@
 package sk.ilyze.ilyze;
 
-/**
- * This is a tutorial source code
- * provided "as is" and without warranties.
- *
- * For any question please visit the web site
- * http://www.survivingwithandroid.com
- *
- * or write an email to
- * survivingwithandroid@gmail.com
- *
- */
-
         import org.json.JSONArray;
         import org.json.JSONException;
         import org.json.JSONObject;

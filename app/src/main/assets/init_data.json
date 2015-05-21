@@ -1,58 +1,46 @@
 [
 	{
-	"region_name": "region 10",
+	"region_name": "Nízke Tatry",
 	"resorts": [
 		{
-			"name": "resort 1",
+			"name": "Čachovo - Selce",
+		    "length": 1950,
+		    "running": 0,
+		    "description": "Lyžiarske stredisko Selce-Čachovo je vzdialené 10 km od centra Banskej Bystrice. Lyžiarske svahy sú pravidelne udržiavané a vhodné pre začínajúcich i náročných lyžiarov.",
+		    "elevation": 180,
+		    "services": "skiservis, požičovňa lyží, večerné lyžovanie, technické zasnežovanie, sociálne zariadenie, lyžiarska škola, bufet, reštaurácia, možnosti ubytovania, klzisko, parkovisko, detský areál",
+		    "url": "www.selce-cachovo.sk",
+		    "snow": 0,
 			"lifts":[
 			    {
-			    "name": "lift1"
-			    }
+			     "name": "A - DOPPELMAYR I.",
+				 "type": 3,
+				  "length": 700,
+				  "capacity": 1440,
+				  "operational": 0
+			    },
+			  {
+				"name": "B - Tatrapoma F-10",
+				"type": 1,
+				"length": 340,
+				"capacity": 560,
+				"operational": 1
+			  },
+			  {
+				"name": "C - DOPPELMAYR II.",
+				"type": 2,
+				"length": 400,
+				"capacity": 1200,
+				"operational": 0
+			  },
+			  {
+				"name": "D - EPV 300",
+				"type": 0,
+				"length": 100,
+				"capacity": 100,
+				"operational": 1
+			  }
 			]
-		},
-		{
-			"name": "resort 2",
-			"lifts":[
-			    {
-           	    "name": "lift1"
-           	    }
-        	]
-		},
-		{
-			"name": "resort 3",
-			"lifts":[
-			    {
-			    "name": "lift1"
-			    }
-         	]
 		}]
-	},
-	{
-	"region_name": "region 11",
-	"resorts": [
-    		{
-    			"name": "resort 4",
-    			"lifts":[
-    			    {
-    			    "name": "lift2"
-    			    }
-    			]
-    		},
-    		{
-    			"name": "resort 5",
-    			"lifts":[
-               	    {
-                        "name": "lift2"
-                    }
-            	]
-    		},
-    		{
-    			"name": "resort 6",
-    			"lifts":[
-    			    {
-    			    "name": "lift2"
-    			    }
-             	]
-    		}]
-    	}
+	}
 ]

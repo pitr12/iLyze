@@ -1,15 +1,26 @@
 package sk.ilyze.ilyze;
 
 
+import android.content.res.AssetManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,40 +39,127 @@ public class ResortActivity extends ActionBarActivity {
         ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_resort, null);
         listView = (ListView) contentView.findViewById(R.id.list_view);
 
+        int resortId = getIntent().getExtras().getInt(Constants.keyResortId);
+        resort= DatabaseManager.getInstance().getResortWithId(resortId);
+        insertContent(contentView);
+
         setContentView(contentView);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        int resortId = getIntent().getExtras().getInt(Constants.keyResortId);
-        resort= DatabaseManager.getInstance().getResortWithId(resortId);
-        setupListView();
-        setTitle(Constants.appName + " " +resort.getName()+" - lanovky");
+        createLiftTable();
+        setTitle(Constants.appName + " - " + resort.getName());
     }
 
-    private void setupListView() {
-        if (null != resort) {
-            final List<Lift> lifts = resort.getLifts();
-            List<String> titles = new ArrayList<String>();
-            for (Lift l: lifts) {
-                titles.add(l.getName());
+    protected void insertContent(View contentView){
+
+        TextView desc = (TextView) contentView.findViewById(R.id.descriptionText);
+        desc.setText(resort.getDescription());
+
+
+        TextView services = (TextView) contentView.findViewById(R.id.servicesText);
+        services.setText(resort.getServices());
+
+        TextView elevation = (TextView) contentView.findViewById(R.id.elevationText);
+        elevation.setText(resort.getElevation() + " m");
+
+        TextView length = (TextView) contentView.findViewById(R.id.lengthText);
+        length.setText(resort.getLength() + " m");
+
+        TextView running = (TextView) contentView.findViewById(R.id.runningText);
+        running.setText(resort.getRunning() + " %");
+
+        TextView snow = (TextView) contentView.findViewById(R.id.snowText);
+        snow.setText(resort.getSnow() + " cm");
+
+        TextView web = (TextView) contentView.findViewById(R.id.webText);
+        web.setText(resort.getUrl());
+    }
+
+    protected void createLiftTable(){
+        TableLayout liftsLayout = (TableLayout)findViewById(R.id.lifts);
+        liftsLayout.setStretchAllColumns(true);
+        liftsLayout.bringToFront();
+
+        List<Lift> lifts = resort.getLifts();
+
+        for(int i = 0; i < lifts.size(); i++){
+            Lift lift = lifts.get(i);
+            Drawable operationIcon = null;
+            Drawable typeIcon = null;
+            InputStream ims = null;
+            // load image
+            try {
+                AssetManager assetManager = getAssets();
+                // get input stream
+                if(lift.getOperational() == 0) {
+                    ims = assetManager.open("no.png");
+                }
+                else{
+                    ims = assetManager.open("yes.png");
+                }
+                // load image as Drawable
+                operationIcon = Drawable.createFromStream(ims, null);
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
-            listView.setAdapter(adapter);
-//            final Activity activity = this;
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    Resort item = resorts.get(position);
-//                    Intent intent = new Intent(activity,ResortActivity.class);
-//                    intent.putExtra(Constants.keyResortId, item.getId());
-//                    startActivity(intent);
-//                }
-//            });
+            catch(IOException ex) {
+                return;
+            }
+
+            try {
+                AssetManager assetManager = getAssets();
+                // get input stream
+                ims = assetManager.open("types/" + lift.getType() + ".png");
+                // load image as Drawable
+                typeIcon = Drawable.createFromStream(ims, null);
+            }
+            catch(IOException ex) {
+                return;
+            }
+
+            TableRow tr =  new TableRow(this);
+
+            TextView c1 = new TextView(this);
+            c1.setText(lift.getName());
+            c1.setWidth(275);
+
+            ImageView img = new ImageView(this);
+            img.setPadding(-40, 10, 0, 10);
+            img.setMinimumWidth(75);
+            img.setMinimumHeight(75);
+            img.setImageDrawable(typeIcon);
+
+            TextView c3 = new TextView(this);
+            c3.setText("" + lift.getLength());
+            c3.setPadding(10,0,0,0);
+            TextView c4 = new TextView(this);
+            c4.setText("" + lift.getCapacity());
+            c4.setPadding(10, 0, 0, 0);
+
+
+            ImageView img2 = new ImageView(this);
+            img2.setMaxWidth(100);
+            img2.setMaxHeight(100);
+            img2.setPadding(-40, 10, 0, 10);
+            img2.setMinimumWidth(75);
+            img2.setMinimumHeight(75);
+            img2.setImageDrawable(operationIcon);
+
+            tr.addView(c1);
+            tr.addView(img);
+            tr.addView(c3);
+            tr.addView(c4);
+            tr.addView(img2);
+
+            View v = new View(this);
+            v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
+            v.setBackgroundColor(Color.rgb(255, 255, 255));
+
+            liftsLayout.addView(tr);
+            liftsLayout.addView(v);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

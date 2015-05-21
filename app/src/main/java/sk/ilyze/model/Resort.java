@@ -29,10 +29,35 @@ public class Resort {
     private int elevation;
 
     @DatabaseField
+    private int snow;
+
+    @DatabaseField
     private String url;
 
     @DatabaseField
     private String description;
+
+    @DatabaseField
+    private String services;
+
+    @DatabaseField
+    private int running;
+
+    public int getSnow() {
+        return snow;
+    }
+
+    public void setSnow(int snow) {
+        this.snow = snow;
+    }
+
+    public String getServices() {
+        return services;
+    }
+
+    public void setServices(String services) {
+        this.services = services;
+    }
 
     public int getId() {
         return id;
@@ -64,6 +89,14 @@ public class Resort {
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
     }
 
     public int getElevation() {

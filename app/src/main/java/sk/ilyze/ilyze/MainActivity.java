@@ -70,22 +70,35 @@ public class MainActivity extends ActionBarActivity{
 
         for(int i=0; i<data.length(); i++){
             JSONObject region = data.getJSONObject(i);
-            String region_name = region.getString("region_name");
 
+            String region_name = region.getString("region_name");
             Region r = createRegion(region_name);
 
             JSONArray resorts = region.getJSONArray("resorts");
             for(int j=0; j<resorts.length(); j++){
+
                 JSONObject resort = resorts.getJSONObject(j);
                 String resort_name = resort.getString("name");
-                Resort rs = createResort(resort_name,r);
+                int resort_length = resort.getInt("length");
+                int resort_running = resort.getInt("running");
+                int resort_elevation = resort.getInt("elevation");
+                String resort_description = resort.getString("description");
+                String resort_services = resort.getString("services");
+                String resort_url = resort.getString("url");
+                int resort_snow = resort.getInt("snow");
+
+                Resort rs = createResort(resort_name,r, resort_length, resort_running, resort_elevation, resort_description,resort_services,resort_url,resort_snow);
 
                 JSONArray lifts = resort.getJSONArray("lifts");
                 for(int k=0; k<lifts.length(); k++){
                     JSONObject lift = lifts.getJSONObject(k);
                     String lift_name = lift.getString("name");
+                    int lift_type = lift.getInt("type");
+                    int lift_capacity = lift.getInt("capacity");
+                    int lift_length = lift.getInt("length");
+                    int lift_operational = lift.getInt("operational");
 
-                    createLift(lift_name,rs);
+                    createLift(lift_name,rs, lift_type, lift_length, lift_capacity, lift_operational);
                 }
             }
         }
@@ -137,7 +150,7 @@ public class MainActivity extends ActionBarActivity{
             String lon = longitude + "";
 
             JSONWeatherTask task = new JSONWeatherTask();
-            task.execute(new String[]{city,lat,lon});
+            task.execute(new String[]{city, lat, lon});
         }
 
     }
@@ -149,22 +162,33 @@ public class MainActivity extends ActionBarActivity{
         return r;
     }
 
-    protected Resort createResort(String name, Region region) {
+    protected Resort createResort(String name, Region region, int length, int running, int elevation, String description, String services, String url, int snow) {
         if (null!=region) {
             Resort item = DatabaseManager.getInstance().newResort();
             item.setName(name);
             item.setRegion(region);
+            item.setLength(length);
+            item.setRunning(running);
+            item.setElevation(elevation);
+            item.setDescription(description);
+            item.setServices(services);
+            item.setUrl(url);
+            item.setSnow(snow);
             DatabaseManager.getInstance().updateResort(item);
             return item;
         }
         return  null;
     }
 
-    protected void createLift(String name, Resort resort) {
+    protected void createLift(String name, Resort resort, int type, int length, int capacity, int operational) {
         if (null!=resort) {
             Lift item = DatabaseManager.getInstance().newLift();
             item.setName(name);
             item.setResort(resort);
+            item.setType(type);
+            item.setLength(length);
+            item.setCapacity(capacity);
+            item.setOperational(operational);
             DatabaseManager.getInstance().updateLift(item);
         }
     }
@@ -251,9 +275,6 @@ public class MainActivity extends ActionBarActivity{
                 Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
 
                 String icon = weather.currentCondition.getIcon() + ".png";
-
-
-
 
                 // load image
                 try {

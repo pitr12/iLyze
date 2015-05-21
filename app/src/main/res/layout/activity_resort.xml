@@ -1,16 +1,202 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
 
-</RelativeLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left">
+
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Popis: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/descriptionLabel"
+            />
+
+        <TextView
+            android:id="@+id/servicesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Služby: "
+            android:textStyle="bold"
+            android:layout_below="@id/descriptionText"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/servicesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/servicesLabel"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/elevationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prevýšenie: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/servicesText"/>
+
+        <TextView
+            android:id="@+id/elevationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/servicesText"
+            android:layout_toRightOf="@id/elevationLabel"/>
+
+        <TextView
+            android:id="@+id/lengthLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dĺžka: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/elevationText"/>
+
+        <TextView
+            android:id="@+id/lengthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/elevationText"
+            android:layout_toRightOf="@id/lengthLabel"/>
+
+        <TextView
+            android:id="@+id/runningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prevádzka: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/lengthText"/>
+
+        <TextView
+            android:id="@+id/runningText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/lengthText"
+            android:layout_toRightOf="@id/runningLabel"/>
+
+        <TextView
+            android:id="@+id/snowLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Výška snehu: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/runningText"/>
+
+        <TextView
+            android:id="@+id/snowText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/runningText"
+            android:layout_toRightOf="@id/snowLabel"/>
+
+        <TextView
+            android:id="@+id/webLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Web: "
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/snowText"/>
+
+        <TextView
+            android:id="@+id/webText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/snowText"
+            android:layout_toRightOf="@id/webLabel"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/liftTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zoznam lanoviek"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp"
+        android:gravity="center" />
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lifts"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+             <TextView
+                android:id="@+id/textView1"
+                android:text="Názov"
+                 android:textSize="15sp"
+                 android:textStyle="bold"
+                 android:layout_weight="6"/>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:text="Typ"
+                android:textStyle="bold"
+                android:layout_weight="2"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:text="Dĺžka"
+                android:textStyle="bold"
+                android:layout_weight="2"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:text="Kapacita"
+                android:textStyle="bold"
+                android:layout_weight="2"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:text="Stav"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="15sp" />
+        </TableRow>
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_weight="1"
+            android:background="#FF909090"
+            android:padding="2dip" />
+    </TableLayout>
+
+</LinearLayout>

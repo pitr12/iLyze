@@ -6,29 +6,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import java.util.List;
 
 import sk.ilyze.model.Region;
+import sk.ilyze.model.Resort;
 
-public class RegionAdapter extends BaseAdapter {
+public class ResortAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private List<Region> regions;
+    private List<Resort> resorts;
     private Context context;
 
-    public RegionAdapter(Context context, List<Region> regions) {
-        this.regions = regions;
+    public ResortAdapter(Context context, List<Resort> resorts) {
+        this.resorts = resorts;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return regions.size();
+        return resorts.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return regions.get(position);
+        return resorts.get(position);
     }
 
     @Override
@@ -41,25 +43,28 @@ public class RegionAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.region_row, parent, false);
+            convertView = this.inflater.inflate(R.layout.resort_row, parent, false);
 
-            holder.txt1 = (TextView) convertView.findViewById(R.id.textView1);
-            holder.txt2 = (TextView) convertView.findViewById(R.id.textView2);
+            holder.name = (TextView) convertView.findViewById(R.id.textView1);
+            holder.length = (TextView) convertView.findViewById(R.id.textView2);
+            holder.running = (TextView) convertView.findViewById(R.id.textView3);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Region region = regions.get(position);
-        holder.txt1.setText(region.getName());
-        holder.txt2.setText("Počet stredísk: " +Integer.toString(region.getResorts().size()));
+        Resort resort = resorts.get(position);
+        holder.name.setText(resort.getName());
+        holder.length.setText(Integer.toString(resort.getLength()) + " m");
+        holder.running.setText(Integer.toString(resort.getRunning()) + "%");
 
         return convertView;
     }
 
     private class ViewHolder {
-        TextView txt1;
-        TextView txt2;
+        TextView name;
+        TextView length;
+        TextView running;
     }
 
 }

@@ -39,21 +39,19 @@ public class RegionActivity extends ActionBarActivity {
         int regionId = getIntent().getExtras().getInt(Constants.keyRegionId);
         region = DatabaseManager.getInstance().getReionWithId(regionId);
         setupListView();
-        setTitle(Constants.appName + " " +region.getName());
+        setTitle(Constants.appName + " - " +region.getName());
     }
 
     private void setupListView() {
         if (null != region) {
             final List<Resort> resorts = region.getResorts();
-            List<String> titles = new ArrayList<String>();
-            for (Resort r : resorts) {
-                titles.add(r.getName());
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
+
+            ResortAdapter adapter = new ResortAdapter(this, resorts);
             listView.setAdapter(adapter);
+
             final Activity activity = this;
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
+
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Resort item = resorts.get(position);
                     Intent intent = new Intent(activity,ResortActivity.class);
